@@ -1,0 +1,8 @@
+setup.py
+poker.egg-info/PKG-INFO
+poker.egg-info/SOURCES.txt
+poker.egg-info/dependency_links.txt
+poker.egg-info/entry_points.txt
+poker.egg-info/not-zip-safe
+poker.egg-info/requires.txt
+poker.egg-info/top_level.txt
