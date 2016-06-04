@@ -1,8 +1,5 @@
 #!/usr/bin/env python
-"""
 
-Copyright 2015 BrightSpec
-"""
 
 import os
 import re
