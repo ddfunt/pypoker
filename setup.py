@@ -1,5 +1,8 @@
 #!/usr/bin/env python
+"""
 
+Copyright 2016 Matt
+"""
 
 import os
 import re
@@ -68,7 +71,7 @@ setup(
     version=get_version(),
     author='Matt',
     author_email='diracdeltafunct@gmail.com',
-    url='spectralengine.com',
+    url='spectra.engine.com',
     description=description(),
     long_description=readme(),
     packages=packages,
