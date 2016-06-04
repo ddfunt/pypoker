@@ -2,7 +2,7 @@ from collections import OrderedDict, Counter
 from itertools import groupby
 from operator import itemgetter
 import itertools
-import copy
+import warnings
 
 from poker.constants import possible_hands
 
@@ -22,7 +22,8 @@ class Card:
     faces = [(str(x), x) for x in range (1, 11)]
     faces.extend([('J', 11), ('Q', 12), ('K', 13), ('A', 14)])
     faces = OrderedDict(faces)
-    suits = OrderedDict([('d', 'diamonds'), ('h', 'hearts'), ('s', 'spades'), ('c', 'clubs')])
+    suits = OrderedDict([('d', 'diamonds'), ('h', 'hearts'),
+                         ('s', 'spades'), ('c', 'clubs')])
 
     def __init__(self, face, suit=None):
 
@@ -75,18 +76,19 @@ class Hand(dict):
             else:
                 self[obj] = []
 
-        #if 'fill' in kwargs.keys():
-        #    self.hole.extend(kwargs['fill'])
-
     def append(self, cards):
         if type(cards) is not list:
             cards = [cards]
 
-        phase = 0
-        current_phase = self.get_phase(phase)
         for card in cards:
-            if len(self[phase_name]) >= self.maxes[phase_name]:
-                pass
+            phase = self.get_phase()
+            if phase:
+                if type(card).__name__ != 'Card':
+                    card = Card(card)
+                self[phase].append(card)
+            else:
+                warnings.warn('Hand full!! %s not added'%card, Warning)
+
 
     def get_phase(self ):
         cards = self._consolidate()
@@ -117,8 +119,8 @@ class Hand(dict):
             deck.remove(card)
 
         combinations = itertools.combinations(deck, 7-len(table))
-        outs = [Hand(hole=self.hole, flop=self.flop, turn=self.turn, river=self.river,
-                     fill=x) for x in combinations]
+        outs = [Hand(hole=self.hole, flop=self.flop, turn=self.turn,
+                     river=self.river, fill=x) for x in combinations]
 
         bests = [(x, self._get_best(x.make_hand()[1])) for x in outs]
 
@@ -177,30 +179,28 @@ class Hand(dict):
                   'royal_flush': royal_flush,
                   'high':hand}
 
-        best = self._get_best(result)
+        best = self._trim(self._get_best(result), hand)
 
+        return best, result
+
+    def _trim(self, best, hand):
         for card in best[1]:
             hand.remove(card)
 
         #TODO write test for this logic
         needed = 5 - len(best[1])
         if needed < 0:
-            return (best[0], sorted(best[1])[-5:]), result
+            return (best[0], sorted(best[1])[-5:])
         elif needed == 0 or len(hand) == 0:
-            return best, result
+            return best
         elif len(hand) <= needed:
             best[1].extend(hand)
-            return best, result
+            return best
         else:
             best[1].extend(sorted(hand)[-needed:])
-            return best, result
+            return best
 
-
-
-
-
-
-        return best, result
+        return best
 
     def _get_best(self, hands):
         for hand in reversed(possible_hands):
@@ -288,7 +288,6 @@ class Hand(dict):
         cards = [card for card in hand if card.face in dups]
         return cards
 
-
     def _straight_flush(self):
         pass
 
@@ -299,7 +298,8 @@ class Hand(dict):
         this_rank = possible_hands.index(self.hand[0])
         other_rank = possible_hands.index(other.hand[0])
         if this_rank == other_rank:
-            for this, o in reversed(list(zip(sorted(self.hand[1]), sorted(other.hand[1])))):
+            for this, o in reversed(list(zip(sorted(self.hand[1]),
+                                             sorted(other.hand[1])))):
                 if this < o:
                     return True
             return False
@@ -311,19 +311,7 @@ if __name__ == '__main__':
 
 
     c = Hand(hole=['10h', 'Jh'], flop=['Qh', 'Kd', 'Ad'], turn=['1h'])
-    c2 = Hand(hole=['10h', 'Jh'], flop=['Qh', 'Kd', '9s'], turn=['1h'], river=['3s'])
 
-    c3 = Hand(hole=['10h', '6d'], flop=['Qh', 'Qd', 'Qs'], turn=['1h'], river=['3s'])
-    #for x, y in c3.make_hand()[1].items():
-    #    print(x, y)
-
-    x = Hand(hole=['10h', '10h'], flop=['Qh', 'Qd', 'Qd'])#, turn=['Qs'], river=['10d'])
-    #print(x.hand)
-
-    #x.calc_outs(x.hand)
-    #c.calc_outs(c.hand)
-    #c.calc_outs(c.hand, players=True)
 
     z = Hand(hole=['Qd', 'Qh'], flop=['Ks', 'Qc', 'Kh'], turn=['8d'], river=['5c'])
 
-    print(z.hand)
