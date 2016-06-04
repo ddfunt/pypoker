@@ -71,4 +71,3 @@ def test_append_hand_from_str(test_inputs, target):
         assert Card('10d') in test_inputs[target[1]]
 
 
-\
