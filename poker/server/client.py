@@ -16,15 +16,10 @@ socket = context.socket(zmq.REQ)
 def send(msg):
     with context.socket(zmq.REQ) as socket:
         socket.connect ("tcp://76.1.134.36:%s" % port)
-        socket.send (msg.encode())
+        socket.send (msg)
         #  Get the reply.
         message = socket.recv()
 
     return message
 
 
-#  Do 10 requests, waiting each time for a response
-for request in range (1,10):
-    print(send('penis'))
-
-    #socket.close()

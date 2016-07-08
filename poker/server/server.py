@@ -1,6 +1,8 @@
 import zmq
 import time
 import sys
+from PIL import Image
+import pickle
 
 port = "5556"
 if len(sys.argv) > 1:
@@ -16,5 +18,7 @@ while True:
     #  Wait for next request from client
     message = socket.recv()
     print("Received request: ", message)
-    time.sleep (1)
+    image = pickle.loads(message)
+    print(image)
+    #time.sleep (1)
     socket.send("World from %s" % port)

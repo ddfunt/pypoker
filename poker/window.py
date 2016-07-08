@@ -7,6 +7,8 @@ import time
 import ctypes
 import subprocess
 import pyautogui
+from poker.server.client import send
+import pickle
 
 
 from poker.paths import Paths
@@ -96,7 +98,11 @@ def run_ahk():
                                    os.path.join(Paths.ahk_path(), 'test.ahk')), shell=True)
 
 
+def get_pot(image):
+    im = image.crop((475, 236, 649, 264))
+    im.save('test.png')
 
+    return im
 # directx scan codes http://www.gamespp.com/directx/directInputKeyboardScanCodes.html
 #while (True):
 import time
@@ -107,15 +113,21 @@ if __name__ == '__main__':
     x = GameWindow('No Limit')
     im = screenGrab()
     print(check_turn(im))
-    #mousePos(20, 20)
-    #write_mouse_move(50,50, x.hwid)
-    #run_ahk()
-    #mousePos(100, 100)
+    print(im.size)
+    pot_image = get_pot(im)
 
-    #pyautogui.click(100, 100)
+    print(send(pickle.dumps(pot_image)))
 
 
+    #while True:
+    #    print(win32api.GetCursorPos())
 
+"""
+475 236
+640, 236
+475, 264
+640, 264
+"""
 
 """
 ControlClick2(X, Y, WinTitle="", WinText="", ExcludeTitle="", ExcludeText="")
