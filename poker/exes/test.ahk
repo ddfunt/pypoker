@@ -1,0 +1,3 @@
+PostMessage, 0x200, 0, 50&0xFFFF | 50<<16, , 395480 ; WM_MOUSEMOVE
+PostMessage, 0x201, 0, 50&0xFFFF | 50<<16, , 395480 ; WM_LBUTTONDOWN
+PostMessage, 0x202, 0, 50&0xFFFF | 50<<16, , 395480 ; WM_LBUTTONUP

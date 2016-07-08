@@ -275,7 +275,6 @@ class Hand(dict):
         else:
             return sequence[-5:]
 
-
     def _flush(self, hand):
         suits = [card.suit for card in hand]
         dups = [item for item, count in Counter(suits).items() if count > 4]
@@ -310,8 +309,9 @@ class Hand(dict):
 if __name__ == '__main__':
 
 
-    c = Hand(hole=['10h', 'Jh'], flop=['Qh', 'Kd', 'Ad'], turn=['1h'])
+    h = Hand(hole=['10h', 'Jh'], flop=['Qh', 'Kh', 'Ah'], turn=['1h'])
+    #h1
+    h2 = Hand(hole=['5h', '6d'], flop=['7d', '8c', '9h'])
 
-
-    z = Hand(hole=['Qd', 'Qh'], flop=['Ks', 'Qc', 'Kh'], turn=['8d'], river=['5c'])
-
+    print(h.make_hand())
+    print(h2.make_hand())
