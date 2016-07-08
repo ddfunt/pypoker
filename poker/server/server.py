@@ -17,14 +17,18 @@ socket.bind("tcp://*:%s" % port)
 
 
 def get_image_text(image):
+
     tool = pyocr.get_available_tools()[0]
+    print(tool)
     langs = tool.get_available_languages()
     lang = langs[langs.index('eng')]
+    print(lang)
     txt = tool.image_to_string(
         image,
         lang=lang,
         builder=pyocr.builders.TextBuilder()
     )
+    print('done')
     return txt
 
 while True:
@@ -34,6 +38,6 @@ while True:
     buff = BytesIO(message)
     image = Image.open(buff)
     print(image)
-    print(get_image_text(image))
+    txt = get_image_text(image)
     #time.sleep (1)
-    socket.send("rec".encode())
+    socket.send(txt.encode())
