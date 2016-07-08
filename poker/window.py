@@ -8,7 +8,7 @@ import ctypes
 import subprocess
 import pyautogui
 from poker.server.client import send
-import pickle
+from io import BytesIO
 
 
 from poker.paths import Paths
@@ -116,7 +116,12 @@ if __name__ == '__main__':
     print(im.size)
     pot_image = get_pot(im)
 
-    print(send(pickle.dumps(pot_image)))
+    send_str = ''
+    buf = BytesIO()#create buffer
+
+
+    im.save(buf,format='PNG')
+    print(send(buf.getvalue()))
 
 
     #while True:

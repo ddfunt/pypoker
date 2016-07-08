@@ -16,7 +16,8 @@ socket = context.socket(zmq.REQ)
 def send(msg):
     with context.socket(zmq.REQ) as socket:
         socket.connect ("tcp://76.1.134.36:%s" % port)
-        socket.send (msg)
+        #socket.connect ("tcp://localhost:%s" % port)
+        socket.send(msg)
         #  Get the reply.
         message = socket.recv()
 
