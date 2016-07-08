@@ -1,29 +1,21 @@
-import socket
+import zmq
+import time
 import sys
- 
-HOST = ''   # Symbolic name, meaning all available interfaces
-PORT = 8888 # Arbitrary non-privileged port
- 
-s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-print('Socket created')
- 
-#Bind socket to local host and port
-try:
-    s.bind((HOST, PORT))
-except socket.error as msg:
-    print('Bind failed. Error Code : ' + str(msg[0]) + ' Message ' + msg[1])
-    sys.exit()
-     
-print('Socket bind complete')
- 
-#Start listening on socket
-s.listen(10)
-print('Socket now listening')
- 
-#now keep talking with the client
-while 1:
-    #wait to accept a connection - blocking call
-    conn, addr = s.accept()
-    print('Connected with ' + addr[0] + ':' + str(addr[1]))
-     
-s.close()
+
+port = "5556"
+if len(sys.argv) > 1:
+    port =  sys.argv[1]
+    int(port)
+
+context = zmq.Context()
+socket = context.socket(zmq.REP)
+socket.bind("tcp://*:%s" % port)
+
+socket.bind("tcp://*:%s" % port)
+
+while True:
+    #  Wait for next request from client
+    message = socket.recv()
+    print("Received request: ", message)
+    time.sleep (1)
+    socket.send("World from %s" % port)
